@@ -4,13 +4,17 @@ import com.example.demo.dto.DtoUser;
 import com.example.demo.models.User;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import org.springframework.http.ResponseEntity;
 
 /**
  * @author perez
  * model,repository,dto,mapper,service,serviceImpl,controller
  */
 public interface ServiceUser {
+
+    ResponseEntity<String> ingresar(Map<String, String> requestMap);
 
     List<DtoUser> listaUsuarios();
     

@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.DynamicUpdate;
  * @author perez
  * model,repository,dto,mapper,service,serviceImpl,controller
  */
-
+@NamedQuery(name="User.findByEmail",query="select u from User u where u.email=:email")
 @Entity
 @Data
 @NoArgsConstructor

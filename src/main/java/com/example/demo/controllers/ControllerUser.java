@@ -7,6 +7,7 @@ import com.example.demo.repository.RepositoryUser;
 import com.example.demo.service.ServiceUser;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,6 +61,17 @@ public class ControllerUser {
         
         DtoUser newUserDto=mu.toDto(newUser);//Aquí lo convertimos a Dto
         return new ResponseEntity<>(dtoU,HttpStatus.CREATED);
+    }
+        
+    @PostMapping("/ingresar")
+    public ResponseEntity<String> ingreso(@RequestBody(required=true) Map<String,String> requestMap){
+        try{
+            return su.ingresar(requestMap);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return new ResponseEntity<>("algo salió mal logueandose",HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }
