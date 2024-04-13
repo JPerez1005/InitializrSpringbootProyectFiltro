@@ -56,19 +56,14 @@ public class ServiceImplLibro implements ServiceLibro{
     @Override
     public DtoLibro updateLibro(Long id, DtoLibro dl) throws ParseException{
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        Optional<Libro> optionalLibro=rl.findById(id);
-        if(optionalLibro.isPresent()){
-            Libro l=optionalLibro.get();
-            l.setId(dl.getId());
-            l.setAutor(dl.getAutor());
-            l.setGenero(dl.getGenero());
-            l.setTitulo(dl.getTitulo());
-            l.setCantidad(dl.getCantidad());
-//            l.setFecha_publicacion(ml.convertidorFechaDate(dl.getFecha_publicacion()));
-            
-            l=rl.save(l);
-            return ml.toDto(l);
-        }
+            Optional<Libro> optionalLibro=rl.findById(id);
+            if(optionalLibro.isPresent()){
+                Libro l=optionalLibro.get();
+                l=ml.toEntity(dl);
+                
+                l=rl.save(l);
+                return ml.toDto(l);
+            }
         }
         return null;
     }
