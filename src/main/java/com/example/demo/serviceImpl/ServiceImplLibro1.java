@@ -5,6 +5,7 @@ import com.example.demo.mapper.MapperLibro;
 import com.example.demo.models.Libro;
 import com.example.demo.repository.RepositoryLibro;
 import com.example.demo.security.jwt.JwtFilter;
+import com.example.demo.service.ServiceEntity;
 import com.example.demo.service.ServiceLibro;
 import java.text.ParseException;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
  * @author perez
  */
 @Service
-public class ServiceImplLibro implements ServiceLibro{
+public class ServiceImplLibro1 implements ServiceEntity<DtoLibro, Long>{
 
     @Autowired
     private JwtFilter jwtFilter;
@@ -29,20 +30,18 @@ public class ServiceImplLibro implements ServiceLibro{
     private MapperLibro ml;
     
     @Override
-    public List<DtoLibro> getAllLibros() {
+    public List<DtoLibro> getAll() {
         List<Libro> libros=rl.findAll();
         return libros.stream()
                 .map(ml::toDto)
                 .collect(Collectors.toList());
     }
 
-    @Override
     public Optional<DtoLibro> getLibroById(Long id) {
         Optional<Libro> optionalMedico=rl.findById(id);
         return optionalMedico.map(ml::toDto);
     }
 
-    @Override
     public DtoLibro createLibro(DtoLibro dl) throws ParseException{
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         Libro l;
@@ -53,7 +52,6 @@ public class ServiceImplLibro implements ServiceLibro{
         return null;
     }
 
-    @Override
     public DtoLibro updateLibro(Long id, DtoLibro dl) throws ParseException{
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
             Optional<Libro> optionalLibro=rl.findById(id);
@@ -68,11 +66,32 @@ public class ServiceImplLibro implements ServiceLibro{
         return null;
     }
 
-    @Override
     public void deleteLibro(Long id) {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         rl.deleteById(id);
         }
+    }
+
+    
+
+    @Override
+    public Optional<DtoLibro> getById(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public DtoLibro create(DtoLibro dto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public DtoLibro update(Long id, DtoLibro dto) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void delete(Long id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

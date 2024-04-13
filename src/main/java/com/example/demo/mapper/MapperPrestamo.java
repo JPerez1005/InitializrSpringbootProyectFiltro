@@ -2,6 +2,7 @@ package com.example.demo.mapper;
 
 import com.example.demo.dto.DtoPrestamo;
 import com.example.demo.models.Prestamo;
+import com.example.demo.security.jwt.JwtFilter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -17,6 +18,9 @@ public class MapperPrestamo {
     private ModelMapper modelMapper;
     
     @Autowired
+    private JwtFilter jwtFilter;
+    
+    @Autowired
     public MapperPrestamo(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
@@ -24,12 +28,18 @@ public class MapperPrestamo {
     public DtoPrestamo toDto(Prestamo p) {
         DtoPrestamo dp =modelMapper.map(p, DtoPrestamo.class);
         dp.setFecha_prestamo(obtenerFechaActual());
+        if(jwtFilter.isUsuario()){
+            dp.setAprobacion(false);
+        }
         return dp;
     }
 
     public Prestamo toEntity(DtoPrestamo dp) {
         Prestamo p=modelMapper.map(dp, Prestamo.class);
         p.setFecha_prestamo(obtenerFechaActual2());
+        if(jwtFilter.isUsuario()){
+            p.setAprobacion(false);
+        }
         return p;
     }
     

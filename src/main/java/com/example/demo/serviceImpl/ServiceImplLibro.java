@@ -9,7 +9,6 @@ import com.example.demo.service.ServiceLibro;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,36 +18,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceImplLibro implements ServiceLibro{
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    @Autowired private JwtFilter jwtFilter;
     
-    @Autowired
-    private RepositoryLibro rl;
+    @Autowired private RepositoryLibro rl;
     
-    @Autowired
-    private MapperLibro ml;
+    @Autowired private MapperLibro ml;
+    
+    @Autowired private UniversalServiceImpl usi;
     
     @Override
     public List<DtoLibro> getAllLibros() {
-        List<Libro> libros=rl.findAll();
-        return libros.stream()
-                .map(ml::toDto)
-                .collect(Collectors.toList());
+        return usi.getAll(rl, DtoLibro.class);
     }
 
     @Override
     public Optional<DtoLibro> getLibroById(Long id) {
-        Optional<Libro> optionalMedico=rl.findById(id);
-        return optionalMedico.map(ml::toDto);
+        return usi.findById(rl, DtoLibro.class, id);
     }
 
     @Override
     public DtoLibro createLibro(DtoLibro dl) throws ParseException{
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        Libro l;
-        l = ml.toEntity(dl);
-        l=rl.save(l);
-        return ml.toDto(l);
+            return usi.save(rl, dl, Libro.class);
         }
         return null;
     }
@@ -60,7 +51,6 @@ public class ServiceImplLibro implements ServiceLibro{
             if(optionalLibro.isPresent()){
                 Libro l=optionalLibro.get();
                 l=ml.toEntity(dl);
-                
                 l=rl.save(l);
                 return ml.toDto(l);
             }
@@ -71,7 +61,7 @@ public class ServiceImplLibro implements ServiceLibro{
     @Override
     public void deleteLibro(Long id) {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        rl.deleteById(id);
+            rl.deleteById(id);
         }
     }
 
