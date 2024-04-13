@@ -1,5 +1,6 @@
 package com.example.demo.controllers;
 
+import com.example.demo.dto.DtoLibro;
 import com.example.demo.dto.DtoUser;
 import com.example.demo.mapper.MapperUser;
 import com.example.demo.models.User;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,15 +52,34 @@ public class ControllerUser {
                 .orElseGet(()->new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
     
-    @PostMapping("/agregar_usuario")
-    public ResponseEntity<DtoUser> guardarUsuario
-        (@RequestBody DtoUser dtoU) throws ParseException{
-        User newUser=su.createUser(dtoU);
+//    @PostMapping("/agregar_usuario")
+//    public ResponseEntity<DtoUser> guardarUsuario
+//        (@RequestBody DtoUser dtoU) throws ParseException{
+//        User newUser=su.createUser(dtoU);
+//        
+//        if(newUser==null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(dtoU,HttpStatus.CREATED);
+//    }
         
-        if(newUser==null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(dtoU,HttpStatus.CREATED);
+    @PostMapping("/agregar_usuario")
+    public ResponseEntity<DtoUser> guardarUsuario(@RequestBody DtoUser du) throws ParseException{
+        DtoUser createdLibro=su.createUser(du);
+        return new ResponseEntity<>(createdLibro,HttpStatus.OK);
+    }
+    
+    @PutMapping("/modificar_usuario/{id}")
+    public ResponseEntity<DtoUser> modificarUsuario
+        (@PathVariable Long id,@RequestBody DtoUser du) throws ParseException{
+        
+            DtoUser updateUsuario=su.updateUser(id, du);
+            
+            if (updateUsuario!=null) {
+                return new ResponseEntity<>(updateUsuario,HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
     }
         
     @PostMapping("/ingresar")

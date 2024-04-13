@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,46 +44,50 @@ public class ServiceImplUser implements ServiceUser{
     @Autowired
     private CustomerDetailsService detallesPersona;
     
-    @Autowired
-    private JwtUtil jwtUtil;
+    @Autowired private JwtUtil jwtUtil;
+    
+    @Autowired private UniversalServiceImpl usi;
     
     @Override
     public List<DtoUser> listaUsuarios() {
         if(jwtFilter.isAdministrador()){
-            List<User> usuarios=ru.findAll();/*recogemos los datos en entidades*/
-            return usuarios.stream()/*Recorremos datos*/
-                    .map(mu::toDto)/*Lo cambiamos en Dto*/
-                    .collect(Collectors.toList());/*Lo recolectamos en una lista*/
+            return usi.getAll(ru, DtoUser.class);
         }
         return null;
-        }
+    }
 
     @Override
     public Optional<DtoUser> getUserById(Long id) {
         if(jwtFilter.isAdministrador()){
-        Optional<User> userOptional=ru.findById(id);
-        return userOptional.map(mu::toDto);
+            return usi.findById(ru, DtoUser.class, id);
         }
         return null;
     }
 
     @Override
-    public User createUser(DtoUser dtoUser) throws ParseException{
-        //cambiamos datos de dto a entidad
-        User u=mu.toEntity(dtoUser);
-        /*Guardamos la cita*/
-        return ru.save(u);
-        
+    public DtoUser createUser(DtoUser du) throws ParseException{
+        return usi.save(ru, du,User.class);
     }
 
     @Override
-    public DtoUser updateUser(Long id, DtoUser dtoUser) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public DtoUser updateUser(Long id, DtoUser du) {
+        if(jwtFilter.isAdministrador()){
+            Optional<User> optionalUser=ru.findById(id);
+            if(optionalUser.isPresent()){
+                User u=optionalUser.get();
+                u=mu.toEntity(du);
+                u=ru.save(u);
+                return mu.toDto(u);
+            }
+        }
+        return null;
     }
 
     @Override
     public void deleteUser(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if(jwtFilter.isAdministrador()){
+            ru.deleteById(id);
+        }
     }
 
     @Override

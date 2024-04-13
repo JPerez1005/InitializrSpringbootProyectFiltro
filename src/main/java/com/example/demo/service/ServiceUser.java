@@ -20,7 +20,7 @@ public interface ServiceUser {
     
     Optional<DtoUser> getUserById(Long id);
     
-    User createUser(DtoUser dtoUser) throws ParseException;
+    DtoUser createUser(DtoUser dtoUser) throws ParseException;
     
     DtoUser updateUser(Long id,DtoUser dtoUser);
     
