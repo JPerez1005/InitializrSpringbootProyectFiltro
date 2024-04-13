@@ -16,7 +16,7 @@ public class DtoPrestamo {
     
     private boolean aprobacion;
     
-    private DtoUser user;
+    private DtoUser usuario;
     
     private DtoLibro libro;
 }
