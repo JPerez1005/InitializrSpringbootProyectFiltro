@@ -45,13 +45,12 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     
     @Autowired private MapperLibro ml;
     
+    @Autowired private UniversalServiceImpl usi;
+    
     @Override
     public List<DtoPrestamo> getAllPrestamos() {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        List<Prestamo> prestamos=rp.findAll();
-        return prestamos.stream()
-                .map(mp::toDto)
-                .collect(Collectors.toList());
+            return usi.getAll(rp, DtoPrestamo.class);
         }
         return null;
     }
@@ -59,8 +58,7 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     @Override
     public Optional<DtoPrestamo> getPrestamoById(Long id) {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        Optional<Prestamo> optionalPrestamo=rp.findById(id);
-        return optionalPrestamo.map(mp::toDto);
+            return usi.findById(rp, DtoPrestamo.class, id);
         }
         return null;
     }
@@ -69,11 +67,11 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     public DtoPrestamo createPrestamo(DtoPrestamo dp,Long userId,Long libroId) throws ParseException {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
             /*Datos del Dto*/
-            DtoUser du=convertidorUser(userId)
+            DtoUser du=usi.convertidorEntidades(ru, DtoUser.class, userId)
                 .orElseThrow(()->new EntityNotFoundException
                 ("Usuario no encontrado"));
 
-            DtoLibro dl=convertidorLibro(libroId)
+            DtoLibro dl=usi.convertidorEntidades(rl, DtoLibro.class, libroId)
                 .orElseThrow(()->new EntityNotFoundException
                 ("Libro no encontrado"));
 
@@ -96,26 +94,16 @@ public class ServiceImplPrestamo implements ServicePrestamo{
         System.out.println("Usted no es ni bibliotecario, ni administrador");
         return null;
     }
-    
-    public Optional<DtoUser> convertidorUser(Long id){
-        Optional<User> oo=ru.findById(id);
-        return oo.map(mu::toDto);
-    }
-    
-    public Optional<DtoLibro> convertidorLibro(Long id){
-        Optional<Libro> oo=rl.findById(id);
-        return oo.map(ml::toDto);
-    }
 
     @Override
     public DtoPrestamo updatePrestamo(Long id, DtoPrestamo dp) throws ParseException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return null;
     }
 
     @Override
     public void deletePrestamo(Long id) {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-        rp.deleteById(id);
+            rp.deleteById(id);
         }
     }
 
