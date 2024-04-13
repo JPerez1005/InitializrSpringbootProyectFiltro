@@ -8,6 +8,8 @@ import com.example.demo.models.Prestamo;
 import com.example.demo.models.User;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.springframework.stereotype.Component;
 
@@ -30,12 +32,31 @@ public class MapperPrestamo {
         return formatedFecha;
     }
     
+    public String obtenerFechaActual(){
+        // Obtener la fecha y hora actual
+        LocalDateTime fechaYHoraActual = LocalDateTime.now();
+        // Formatear la fecha y hora actual como una cadena de texto
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String fechaYHoraFormateada = fechaYHoraActual.format(formatter);
+        return fechaYHoraFormateada;
+    }
+    
+    public Date obtenerFechaActual2(){
+        // Obtener la fecha y hora actual en milisegundos
+        long milisegundos = System.currentTimeMillis();
+
+        // Crear un objeto Date con la fecha y hora actual en milisegundos
+        Date fechaActual = new Date(milisegundos);
+
+        return fechaActual;
+    }
+    
     public DtoPrestamo toDto(Prestamo p){
         DtoPrestamo dp=new DtoPrestamo();
         
         dp.setId(p.getId());
         dp.setAprobacion(p.isAprobacion());
-        dp.setFecha_prestamo(convertidorFechaString(p.getFecha_prestamo()));
+        dp.setFecha_prestamo(obtenerFechaActual());
         dp.setFecha_devolucion(convertidorFechaString(p.getFecha_devolucion()));
         
         if(p.getUsuario()!=null){
@@ -73,7 +94,7 @@ public class MapperPrestamo {
         
         p.setId(p.getId());
         p.setAprobacion(p.isAprobacion());
-        p.setFecha_prestamo(convertidorFechaDate(dp.getFecha_prestamo()));
+        p.setFecha_prestamo(obtenerFechaActual2());
         p.setFecha_devolucion(convertidorFechaDate(dp.getFecha_devolucion()));
         
         if(dp.getUser()!=null){

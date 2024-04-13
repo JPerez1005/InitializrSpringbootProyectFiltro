@@ -61,7 +61,7 @@ public class ServiceImplPrestamo implements ServicePrestamo{
 
     @Override
     public DtoPrestamo createPrestamo(DtoPrestamo dp,Long userId,Long libroId) throws ParseException {
-        if(jwtFilter.isUsuario() || jwtFilter.isAdministrador()){
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
             /*Datos del Dto*/
             DtoUser du=convertidorUser(userId)
                 .orElseThrow(()->new EntityNotFoundException
@@ -87,7 +87,7 @@ public class ServiceImplPrestamo implements ServicePrestamo{
             p=rp.save(p);
             return mp.toDto(p);
         }
-        System.out.println("Usted no es ni usuario, ni administrador");
+        System.out.println("Usted no es ni bibliotecario, ni administrador");
         return null;
     }
     
