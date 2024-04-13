@@ -24,13 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/libro")
 public class ControllerLibro {
 
-    @Autowired
-    private ServiceLibro sl;
+    @Autowired private ServiceLibro sl;
     
     @GetMapping("/listar_libros")
     public ResponseEntity<List<DtoLibro>> listarLibros(){
         List<DtoLibro> libros=sl.getAllLibros();
         return new ResponseEntity<>(libros, HttpStatus.OK);
+//        return ResponseEntity.ok(usi.getAll(rl, ml, DtoLibro.class));
     }
     
     @GetMapping("/buscar_libro/{id}")
