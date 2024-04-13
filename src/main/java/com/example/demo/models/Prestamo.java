@@ -31,6 +31,8 @@ public class Prestamo {
     
     private Date fecha_devolucion;
     
+    private boolean aprobacion;
+    
     @ManyToOne(cascade=CascadeType.ALL)
     private User usuario;
     

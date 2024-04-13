@@ -58,8 +58,6 @@ public class ControllerUser {
         if(newUser==null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        
-        DtoUser newUserDto=mu.toDto(newUser);//Aquí lo convertimos a Dto
         return new ResponseEntity<>(dtoU,HttpStatus.CREATED);
     }
         
