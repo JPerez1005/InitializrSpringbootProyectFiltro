@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MapperPrestamo {
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     
     @Autowired
     private JwtFilter jwtFilter;

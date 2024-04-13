@@ -66,26 +66,16 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     @Override
     public DtoPrestamo createPrestamo(DtoPrestamo dp,Long userId,Long libroId) throws ParseException {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
-            /*Datos del Dto*/
-            DtoUser du=usi.convertidorEntidades(ru, DtoUser.class, userId)
+            /*Conversion de datos*/
+            User u=usi.convertidorAEntidades(ru, DtoUser.class, userId)
                 .orElseThrow(()->new EntityNotFoundException
                 ("Usuario no encontrado"));
 
-            DtoLibro dl=usi.convertidorEntidades(rl, DtoLibro.class, libroId)
+            Libro l=usi.convertidorAEntidades(rl, DtoLibro.class, libroId)
                 .orElseThrow(()->new EntityNotFoundException
                 ("Libro no encontrado"));
-
-            /*datos del entity*/
-            User u=ru.findById(du.getId())
-            .orElseThrow(()->new EntityNotFoundException
-            ("Usuario no encontrado"));
-
-            Libro l=rl.findById(dl.getId())
-            .orElseThrow(()->new EntityNotFoundException
-            ("Libro no encontrado"));
-
-            Prestamo p=new Prestamo();
-            p = mp.toEntity(dp);
+            
+            Prestamo p = mp.toEntity(dp);
             p.setLibro(l);
             p.setUsuario(u);
             p=rp.save(p);

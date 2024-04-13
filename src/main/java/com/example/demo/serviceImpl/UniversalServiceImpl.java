@@ -23,10 +23,12 @@ public class UniversalServiceImpl {
                 .collect(Collectors.toList());
     }
     
-    public <Entity, Dto, ID> Optional<Dto> convertidorEntidades(JpaRepository<Entity, ID> repository, Class<Dto> dtoClass,ID id){
+    public <Entity, Dto, ID> Optional<Entity> convertidorAEntidades(JpaRepository<Entity, ID> repository, Class<Dto> dtoClass,ID id){
         Optional<Entity> optionalEntity=repository.findById(id);
-        return optionalEntity.map(entity -> modelMapper.map(entity, dtoClass));
+        optionalEntity.map(entity -> modelMapper.map(entity, dtoClass));
+        return repository.findById(id);
     }
+    
     
     public <Entity, Dto, ID> Optional<Dto> findById(JpaRepository<Entity, ID> repository, Class<Dto> dtoClass, ID id) {
         Optional<Entity> optionalEntity = repository.findById(id);

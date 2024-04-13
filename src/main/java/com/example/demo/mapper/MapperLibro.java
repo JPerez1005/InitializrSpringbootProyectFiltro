@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MapperLibro {
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public MapperLibro(ModelMapper modelMapper) {

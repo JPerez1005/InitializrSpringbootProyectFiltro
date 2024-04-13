@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MapperUser {
     
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     
     @Autowired
     public MapperUser(ModelMapper modelMapper) {
