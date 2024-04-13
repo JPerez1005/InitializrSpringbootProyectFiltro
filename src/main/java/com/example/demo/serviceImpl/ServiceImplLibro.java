@@ -64,7 +64,7 @@ public class ServiceImplLibro implements ServiceLibro{
             l.setGenero(dl.getGenero());
             l.setTitulo(dl.getTitulo());
             l.setCantidad(dl.getCantidad());
-            l.setFecha_publicacion(ml.convertidorFechaDate(dl.getFecha_publicacion()));
+//            l.setFecha_publicacion(ml.convertidorFechaDate(dl.getFecha_publicacion()));
             
             l=rl.save(l);
             return ml.toDto(l);
