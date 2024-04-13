@@ -4,6 +4,7 @@ import com.example.demo.dto.DtoLibro;
 import com.example.demo.mapper.MapperLibro;
 import com.example.demo.models.Libro;
 import com.example.demo.repository.RepositoryLibro;
+import com.example.demo.security.jwt.JwtFilter;
 import com.example.demo.service.ServiceLibro;
 import java.text.ParseException;
 import java.util.List;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceImplLibro implements ServiceLibro{
 
+    @Autowired
+    private JwtFilter jwtFilter;
+    
     @Autowired
     private RepositoryLibro rl;
     
@@ -40,14 +44,18 @@ public class ServiceImplLibro implements ServiceLibro{
 
     @Override
     public DtoLibro createLibro(DtoLibro dl) throws ParseException{
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         Libro l;
         l = ml.toEntity(dl);
         l=rl.save(l);
         return ml.toDto(l);
+        }
+        return null;
     }
 
     @Override
     public DtoLibro updateLibro(Long id, DtoLibro dl) throws ParseException{
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         Optional<Libro> optionalLibro=rl.findById(id);
         if(optionalLibro.isPresent()){
             Libro l=optionalLibro.get();
@@ -61,12 +69,15 @@ public class ServiceImplLibro implements ServiceLibro{
             l=rl.save(l);
             return ml.toDto(l);
         }
+        }
         return null;
     }
 
     @Override
     public void deleteLibro(Long id) {
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         rl.deleteById(id);
+        }
     }
 
 }

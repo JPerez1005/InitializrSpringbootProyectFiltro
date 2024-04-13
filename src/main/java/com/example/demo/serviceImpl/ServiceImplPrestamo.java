@@ -47,16 +47,22 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     
     @Override
     public List<DtoPrestamo> getAllPrestamos() {
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         List<Prestamo> prestamos=rp.findAll();
         return prestamos.stream()
                 .map(mp::toDto)
                 .collect(Collectors.toList());
+        }
+        return null;
     }
 
     @Override
     public Optional<DtoPrestamo> getPrestamoById(Long id) {
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         Optional<Prestamo> optionalPrestamo=rp.findById(id);
         return optionalPrestamo.map(mp::toDto);
+        }
+        return null;
     }
 
     @Override
@@ -108,7 +114,9 @@ public class ServiceImplPrestamo implements ServicePrestamo{
 
     @Override
     public void deletePrestamo(Long id) {
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
         rp.deleteById(id);
+        }
     }
 
 }

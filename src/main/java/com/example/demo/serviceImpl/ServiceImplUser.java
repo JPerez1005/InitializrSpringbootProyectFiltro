@@ -5,6 +5,7 @@ import com.example.demo.mapper.MapperUser;
 import com.example.demo.models.User;
 import com.example.demo.repository.RepositoryUser;
 import com.example.demo.security.CustomerDetailsService;
+import com.example.demo.security.jwt.JwtFilter;
 import com.example.demo.security.jwt.JwtUtil;
 import com.example.demo.service.ServiceUser;
 import java.text.ParseException;
@@ -28,6 +29,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceImplUser implements ServiceUser{
 
+    @Autowired
+    private JwtFilter jwtFilter;
+    
     //datos User
     @Autowired
     private RepositoryUser ru;
@@ -46,16 +50,22 @@ public class ServiceImplUser implements ServiceUser{
     
     @Override
     public List<DtoUser> listaUsuarios() {
-        List<User> usuarios=ru.findAll();/*recogemos los datos en entidades*/
-        return usuarios.stream()/*Recorremos datos*/
-                .map(mu::toDto)/*Lo cambiamos en Dto*/
-                .collect(Collectors.toList());/*Lo recolectamos en una lista*/
-    }
+        if(jwtFilter.isAdministrador()){
+            List<User> usuarios=ru.findAll();/*recogemos los datos en entidades*/
+            return usuarios.stream()/*Recorremos datos*/
+                    .map(mu::toDto)/*Lo cambiamos en Dto*/
+                    .collect(Collectors.toList());/*Lo recolectamos en una lista*/
+        }
+        return null;
+        }
 
     @Override
     public Optional<DtoUser> getUserById(Long id) {
+        if(jwtFilter.isAdministrador()){
         Optional<User> userOptional=ru.findById(id);
         return userOptional.map(mu::toDto);
+        }
+        return null;
     }
 
     @Override
