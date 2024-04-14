@@ -1,9 +1,7 @@
 package com.example.demo.controllers;
 
-import com.example.demo.dto.DtoLibro;
 import com.example.demo.dto.DtoUser;
 import com.example.demo.mapper.MapperUser;
-import com.example.demo.models.User;
 import com.example.demo.repository.RepositoryUser;
 import com.example.demo.service.ServiceUser;
 import java.text.ParseException;
