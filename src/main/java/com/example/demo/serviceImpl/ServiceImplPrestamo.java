@@ -14,11 +14,14 @@ import com.example.demo.repository.RepositoryPrestamo;
 import com.example.demo.repository.RepositoryUser;
 import com.example.demo.security.jwt.JwtFilter;
 import com.example.demo.service.ServicePrestamo;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EntityNotFoundException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,11 +31,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceImplPrestamo implements ServicePrestamo{
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    @Autowired private JwtFilter jwtFilter;
     
-    @Autowired
-    private RepositoryPrestamo rp;
+    @Autowired private RepositoryPrestamo rp;
     
     @Autowired private MapperPrestamo mp;
     
@@ -87,13 +88,15 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     @Override
     public DtoPrestamo updatePrestamo(Long id, DtoPrestamo dp,Long userId,Long libroId) throws ParseException {
         if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
+            
             User usuario = usi.convertidorAEntidades(ru, DtoUser.class, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
             Libro libro = usi.convertidorAEntidades(rl, DtoLibro.class, libroId)
-                    .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado"));
             Prestamo prestamo = rp.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Préstamo no encontrado"));
+                .orElseThrow(() -> new EntityNotFoundException("Préstamo no encontrado"));
             //ahora podemos actualizar los datos que queramos
+            prestamo=mp.toEntity(dp);
             prestamo.setLibro(libro);
             prestamo.setUsuario(usuario);
             rp.save(prestamo);
