@@ -18,7 +18,7 @@ public interface ServicePrestamo {
     
     DtoPrestamo createPrestamo(DtoPrestamo dp,Long userId,Long libroId) throws ParseException;
     
-    DtoPrestamo updatePrestamo(Long id,DtoPrestamo dp) throws ParseException;
+    DtoPrestamo updatePrestamo(Long id,DtoPrestamo dp,Long userId,Long libroId) throws ParseException;
     
     void deletePrestamo(Long id);
 }

@@ -18,7 +18,6 @@ import jakarta.persistence.EntityNotFoundException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -86,7 +85,21 @@ public class ServiceImplPrestamo implements ServicePrestamo{
     }
 
     @Override
-    public DtoPrestamo updatePrestamo(Long id, DtoPrestamo dp) throws ParseException {
+    public DtoPrestamo updatePrestamo(Long id, DtoPrestamo dp,Long userId,Long libroId) throws ParseException {
+        if(jwtFilter.isBibliotecario()|| jwtFilter.isAdministrador()){
+            User usuario = usi.convertidorAEntidades(ru, DtoUser.class, userId)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+            Libro libro = usi.convertidorAEntidades(rl, DtoLibro.class, libroId)
+                    .orElseThrow(() -> new EntityNotFoundException("Libro no encontrado"));
+            Prestamo prestamo = rp.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Préstamo no encontrado"));
+            //ahora podemos actualizar los datos que queramos
+            prestamo.setLibro(libro);
+            prestamo.setUsuario(usuario);
+            rp.save(prestamo);
+            return mp.toDto(prestamo);
+        }
+        System.out.println("Usted no es ni bibliotecario, ni administrador");
         return null;
     }
 
