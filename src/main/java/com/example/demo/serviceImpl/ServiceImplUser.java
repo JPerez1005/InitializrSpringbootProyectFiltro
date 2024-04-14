@@ -51,7 +51,8 @@ public class ServiceImplUser implements ServiceUser{
     @Override
     public List<DtoUser> listaUsuarios() {
         if(jwtFilter.isAdministrador()){
-            return usi.getAll(ru, DtoUser.class);
+            List<DtoUser> usuarios = usi.getAll(ru, DtoUser.class);
+            return usuarios;
         }
         return null;
     }

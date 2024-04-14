@@ -39,7 +39,7 @@ public class ControllerUser {
     
     @GetMapping("/listar_usuarios")
     public ResponseEntity<List<DtoUser>> listarUsuarios(){
-        List<DtoUser> usuarios=su.listaUsuarios();
+        List<DtoUser> usuarios=(List<DtoUser>) su.listaUsuarios();
         return new ResponseEntity<>(usuarios,HttpStatus.OK);
     }
     

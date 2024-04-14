@@ -1,6 +1,5 @@
 package com.example.demo.serviceImpl;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -16,14 +15,18 @@ public class UniversalServiceImpl {
         this.modelMapper = modelMapper;
     }
 
-    public <Entity, Dto> List<Dto> getAll(JpaRepository<Entity, ?> repository, Class<Dto> dtoClass) {
+    public <Entity, Dto> List<Dto> getAll
+        (JpaRepository<Entity, ?> repository, Class<Dto> dtoClass){
         List<Entity> entities = repository.findAll();
-        return entities.stream()
+        if(entities.isEmpty()){
+            System.err.println("los datos están vacios");
+            return null;
+        }else{
+            return entities.stream()
                 .map(entity -> modelMapper.map(entity, dtoClass))
                 .collect(Collectors.toList());
+        }
     }
-    
-    
     
     public <Entity, Dto, ID> Optional<Dto> findById(JpaRepository<Entity, ID> repository, Class<Dto> dtoClass, ID id) {
         Optional<Entity> optionalEntity = repository.findById(id);

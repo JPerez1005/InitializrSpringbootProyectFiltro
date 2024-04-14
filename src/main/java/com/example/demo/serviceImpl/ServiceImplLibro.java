@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 /**
  * @author perez
  */
@@ -27,7 +26,7 @@ public class ServiceImplLibro implements ServiceLibro{
     @Autowired private UniversalServiceImpl usi;
     
     @Override
-    public List<DtoLibro> getAllLibros() {
+    public List<DtoLibro> getAllLibros(){
         return usi.getAll(rl, DtoLibro.class);
     }
 
