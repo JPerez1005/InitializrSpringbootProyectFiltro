@@ -28,18 +28,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceImplUser implements ServiceUser{
 
-    @Autowired
-    private JwtFilter jwtFilter;
+    @Autowired private JwtFilter jwtFilter;
     
-    //datos User
-    @Autowired
-    private RepositoryUser ru;
+    @Autowired private RepositoryUser ru;
     
-    @Autowired
-    private MapperUser mu;
+    @Autowired private MapperUser mu;
     
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    @Autowired private AuthenticationManager authenticationManager;
     
     @Autowired
     private CustomerDetailsService detallesPersona;
